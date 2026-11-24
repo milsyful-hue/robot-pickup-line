@@ -20,6 +20,12 @@ const LINE =
 
 const OUTPUT_DIR = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
+// The kit's hard gate: an invalid entry.txt is never judged, so fail loudly
+// instead of writing one. One line, 1-200 characters, no trailing newline.
+if (LINE.length < 1 || LINE.length > 200 || LINE.includes('\n')) {
+  throw new Error(`invalid line: ${LINE.length} characters`);
+}
+
 mkdirSync(OUTPUT_DIR, { recursive: true });
 writeFileSync(join(OUTPUT_DIR, 'entry.txt'), LINE, 'utf8');
 console.log(`wrote entry.txt (${LINE.length} characters): ${LINE}`);
